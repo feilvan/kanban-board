@@ -27,7 +27,7 @@ export default function SortableItem(props: SortableItemProps) {
       style={style}
       {...attributes}
       {...listeners}
-      className={`w-12 bg-red-200 ${isDragging ? "opacity-50" : ""}`}
+      className={`w-full bg-red-200 ${isDragging ? "opacity-50" : ""}`}
     >
       {props.id}
     </div>
