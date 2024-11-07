@@ -17,7 +17,13 @@ export default function SortableItem(props: SortableItemProps) {
   };
 
   return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+      className="w-12 bg-red-200"
+    >
       {props.id}
     </div>
   );
