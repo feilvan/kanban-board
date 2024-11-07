@@ -13,6 +13,7 @@ import {
   DragStartEvent,
   closestCenter,
   DragOverlay,
+  UniqueIdentifier,
 } from "@dnd-kit/core";
 import {
   arrayMove,
@@ -23,9 +24,10 @@ import {
 
 import SortableItem from "./components/sortable-item";
 import Item from "./components/item";
+import Droppable from "./components/droppable";
 
 interface Column {
-  id: string;
+  id: UniqueIdentifier;
   items: string[];
 }
 
@@ -118,6 +120,7 @@ export default function Home() {
     }
 
     setActiveId(null);
+    console.log(columns);
   }
 
   return (
@@ -130,20 +133,21 @@ export default function Home() {
           sensors={sensors}
           collisionDetection={closestCenter}
         >
-          <div className="flex">
+          <div className="flex gap-x-2">
             {columns.map((column) => (
-              <SortableContext
-                key={column.id}
-                items={column.items}
-                strategy={verticalListSortingStrategy}
-              >
-                <div className="bg-gray-200 p-4 rounded">
-                  <h2>{column.id}</h2>
-                  {column.items.map((item) => (
-                    <SortableItem key={item} id={item} />
-                  ))}
-                </div>
-              </SortableContext>
+              <Droppable key={column.id} id={column.id}>
+                <SortableContext
+                  items={column.items}
+                  strategy={verticalListSortingStrategy}
+                >
+                  <div className="bg-gray-200 p-4 rounded">
+                    <h2>{column.id}</h2>
+                    {column.items.map((item) => (
+                      <SortableItem key={item} id={item} />
+                    ))}
+                  </div>
+                </SortableContext>
+              </Droppable>
             ))}
           </div>
           <DragOverlay>{activeId ? <Item id={activeId} /> : null}</DragOverlay>
@@ -152,3 +156,5 @@ export default function Home() {
     </div>
   );
 }
+
+// TODO: Add droppable to handle empty column case

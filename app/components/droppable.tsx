@@ -1,13 +1,22 @@
-import { useDroppable } from "@dnd-kit/core";
+import { useDroppable, UniqueIdentifier } from "@dnd-kit/core";
 
-export default function Droppable() {
-  const { setNodeRef } = useDroppable({
-    id: "unique-id",
+export default function Droppable({
+  id,
+  children,
+}: {
+  id: UniqueIdentifier;
+  children: React.ReactNode;
+}) {
+  const { setNodeRef, isOver } = useDroppable({
+    id: id,
   });
 
   return (
-    <div ref={setNodeRef} className="bg-red-300">
-      Droppable
+    <div
+      ref={setNodeRef}
+      className={`${isOver ? "bg-green-300" : "bg-yellow-300"}`}
+    >
+      {children}
     </div>
   );
 }

@@ -6,7 +6,7 @@ interface ItemProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const Item = forwardRef<HTMLDivElement, ItemProps>(({ id, ...props }, ref) => {
   return (
-    <div {...props} ref={ref}>
+    <div {...props} ref={ref} className="bg-blue-200">
       {id}
     </div>
   );
