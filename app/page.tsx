@@ -34,6 +34,7 @@ interface Column {
 export default function Home() {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [columns, setColumns] = useState<Column[]>([
+    { id: "delete-column", items: [] }, // Column for deleting items
     { id: "column-1", items: ["Item 1", "Item 2", "Item 3"] },
     { id: "column-2", items: ["Item 4", "Item 5", "Item 6"] },
     { id: "column-3", items: [] }, // Example empty column
@@ -122,7 +123,21 @@ export default function Home() {
     );
 
     if (activeContainer && overContainer) {
-      if (activeContainer.id === overContainer.id) {
+      if (overContainer.id === "delete-column") {
+        // Remove the item from the active container
+        setColumns((cols) =>
+          cols.map((col) =>
+            col.id === activeContainer.id
+              ? {
+                  ...col,
+                  items: col.items.filter(
+                    (item) => item !== active.id.toString()
+                  ),
+                }
+              : col
+          )
+        );
+      } else if (activeContainer.id === overContainer.id) {
         const oldIndex = activeContainer.items.indexOf(active.id.toString());
         let newIndex: number;
         if (overColumn) {
