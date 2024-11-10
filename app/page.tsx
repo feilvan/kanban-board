@@ -18,7 +18,6 @@ import {
 } from "@dnd-kit/core";
 import {
   arrayMove,
-  horizontalListSortingStrategy,
   SortableContext,
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
@@ -27,12 +26,12 @@ import { PopoverClose } from "@radix-ui/react-popover";
 import { GripVertical, Plus, Trash } from "lucide-react";
 import { useEffect, useState } from "react";
 
+import About from "./components/about";
 import Droppable from "./components/droppable";
 import Item from "./components/item";
 import OverlayItem from "./components/overlay-item";
 import SortableItem from "./components/sortable-item";
 import { ThemeToggle } from "./components/theme-toggle";
-import { Badge } from "./components/ui/badge";
 import { Button } from "./components/ui/button";
 import { CardHeader, CardTitle } from "./components/ui/card";
 import { Input } from "./components/ui/input";
@@ -67,7 +66,13 @@ export default function Home() {
     } else {
       setColumns([
         { id: "delete-column", title: "Delete", items: [] },
-        { id: createId({ prefix: "column-" }), title: "Todo", items: [] },
+        {
+          id: createId({ prefix: "column-" }),
+          title: "Todo",
+          items: [
+            { id: createId({ prefix: "item-" }), text: "Make column sortable" },
+          ],
+        },
         {
           id: createId({ prefix: "column-" }),
           title: "In progress",
@@ -262,17 +267,6 @@ export default function Home() {
 
   return (
     <div className="max-w-screen-sm w-full flex flex-col">
-      <div className="mt-12 mb-6 space-y-1.5">
-        <div className="font-semibold leading-none tracking-tight">
-          Kanban Board
-        </div>
-        <div>
-          Drag and drop demo using{" "}
-          <Badge variant="secondary" className="font-mono">
-            dndkit
-          </Badge>
-        </div>
-      </div>
       <DndContext
         onDragStart={handleDragStart}
         onDragOver={handleDragOver}
@@ -280,12 +274,14 @@ export default function Home() {
         sensors={sensors}
         collisionDetection={collisionDetection}
       >
-        <div className="mb-6 flex justify-between">
+        <div className="my-6 flex justify-between">
           <div className="space-x-2">
             <Popover>
-              <PopoverTrigger className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2">
-                <Plus />
-                Item
+              <PopoverTrigger asChild>
+                <Button variant="outline">
+                  <Plus />
+                  Item
+                </Button>
               </PopoverTrigger>
               <PopoverContent align="start" className="flex flex-col gap-y-2">
                 <Input
@@ -294,18 +290,17 @@ export default function Home() {
                   onChange={(e) => setNewItemText(e.target.value)}
                   placeholder="New item"
                 />
-                <PopoverClose
-                  onClick={handleAddItem}
-                  className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2"
-                >
-                  Add Item
+                <PopoverClose asChild>
+                  <Button onClick={handleAddItem}>Add Item</Button>
                 </PopoverClose>
               </PopoverContent>
             </Popover>
             <Popover>
-              <PopoverTrigger className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2">
-                <Plus />
-                Column
+              <PopoverTrigger asChild>
+                <Button variant="outline">
+                  <Plus />
+                  Column
+                </Button>
               </PopoverTrigger>
               <PopoverContent align="start" className="flex flex-col gap-y-2">
                 <Input
@@ -314,19 +309,17 @@ export default function Home() {
                   onChange={(e) => setNewColumnText(e.target.value)}
                   placeholder="New column"
                 />
-                <PopoverClose
-                  onClick={handleAddColumn}
-                  className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2"
-                >
-                  Add Column
+                <PopoverClose asChild>
+                  <Button onClick={handleAddColumn}>Add Column</Button>
                 </PopoverClose>
               </PopoverContent>
             </Popover>
             <ThemeToggle />
+            <About />
           </div>
           <Droppable
             id="delete-column"
-            className={`p-0 gap-2 inline-flex items-center justify-center transition-opacity border-dashed border-red-900 bg-red-950/20 text-red-400 h-9 px-4 py-2 rounded-md self-start ${
+            className={`p-0 gap-2 inline-flex items-center justify-center transition-opacity border-dashed border-red-900 bg-red-50 dark:bg-red-950/20 text-red-400 h-9 px-4 py-2 rounded-md self-start ${
               activeId ? "opacity-100" : "opacity-0"
             }`}
           >
