@@ -1,9 +1,10 @@
+import { UniqueIdentifier } from "@dnd-kit/core";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
 interface SortableItemProps {
-  id: string;
-  // Add other props if needed
+  id: UniqueIdentifier;
+  children: React.ReactNode;
 }
 
 export default function SortableItem(props: SortableItemProps) {
@@ -27,9 +28,9 @@ export default function SortableItem(props: SortableItemProps) {
       style={style}
       {...attributes}
       {...listeners}
-      className={`w-full bg-red-200 ${isDragging ? "opacity-50" : ""}`}
+      className={isDragging ? "opacity-50" : ""}
     >
-      {props.id}
+      {props.children}
     </div>
   );
 }
