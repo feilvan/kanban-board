@@ -18,22 +18,23 @@ import {
 } from "@dnd-kit/core";
 import {
   arrayMove,
+  horizontalListSortingStrategy,
   SortableContext,
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { PopoverClose } from "@radix-ui/react-popover";
-import { GripVertical, Plus, Trash } from "lucide-react";
+import { Plus, Trash } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import About from "./components/about";
 import Droppable from "./components/droppable";
 import Item from "./components/item";
 import OverlayItem from "./components/overlay-item";
+import SortableColumn from "./components/sortable-column";
 import SortableItem from "./components/sortable-item";
 import { ThemeToggle } from "./components/theme-toggle";
 import { Button } from "./components/ui/button";
-import { CardHeader, CardTitle } from "./components/ui/card";
 import { Input } from "./components/ui/input";
 import {
   Popover,
@@ -58,6 +59,7 @@ export default function Home() {
   const [columns, setColumns] = useState<Column[]>([]);
   const [newColumnText, setNewColumnText] = useState("");
   const [newItemText, setNewItemText] = useState("");
+  const [isDraggingColumn, setIsDraggingColumn] = useState(false);
 
   useEffect(() => {
     const savedColumns = localStorage.getItem("columns");
@@ -118,6 +120,9 @@ export default function Home() {
   function handleDragStart(event: DragStartEvent) {
     const { active } = event;
     setActiveId(active.id.toString());
+    if (columns.find((col) => col.id === active.id)) {
+      setIsDraggingColumn(true);
+    }
   }
 
   function handleDragOver(event: DragOverEvent) {
@@ -180,6 +185,7 @@ export default function Home() {
     const { active, over } = event;
     if (!over) {
       setActiveId(null);
+      setIsDraggingColumn(false);
       return;
     }
 
@@ -234,6 +240,7 @@ export default function Home() {
     }
 
     setActiveId(null);
+    setIsDraggingColumn(false);
   }
 
   function handleAddItem() {
@@ -328,28 +335,20 @@ export default function Home() {
           </Droppable>
         </div>
         <div className="flex gap-x-2 overflow-x-auto flex-grow">
-          {columns
-            .filter(({ id }) => id !== "delete-column")
-            .map((column) => (
-              <Droppable key={column.id} id={column.id} className="h-fit">
-                <SortableContext
-                  items={column.items.map((item) => item.id)}
-                  strategy={verticalListSortingStrategy}
-                >
-                  <div className=" w-48 h-full">
-                    <CardHeader className="p-2">
-                      <CardTitle className="flex items-center gap-x-2">
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          className="cursor-grab"
-                        >
-                          <GripVertical />
-                        </Button>
-                        <span>{column.title}</span>
-                      </CardTitle>
-                    </CardHeader>
-                    <div className="px-2 pb-2 flex flex-col gap-y-1">
+          <SortableContext
+            items={columns.map((col) => col.id)}
+            strategy={horizontalListSortingStrategy}
+          >
+            {columns
+              .filter(({ id }) => id !== "delete-column")
+              .map((column) => (
+                <Droppable key={column.id} id={column.id} className="h-fit">
+                  <SortableColumn id={column.id} title={column.title}>
+                    <SortableContext
+                      disabled={isDraggingColumn}
+                      items={column.items.map((item) => item.id)}
+                      strategy={verticalListSortingStrategy}
+                    >
                       {column.items.length > 0 ? (
                         column.items.map((item) => (
                           <SortableItem key={item.id} id={item.id}>
@@ -361,11 +360,11 @@ export default function Home() {
                           Drop items here
                         </div>
                       )}
-                    </div>
-                  </div>
-                </SortableContext>
-              </Droppable>
-            ))}
+                    </SortableContext>
+                  </SortableColumn>
+                </Droppable>
+              ))}
+          </SortableContext>
           <DragOverlay>
             {activeId ? (
               <OverlayItem>
