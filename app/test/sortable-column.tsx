@@ -3,8 +3,8 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { GripVertical } from "lucide-react";
 
-import { Button } from "./ui/button";
-import { CardHeader, CardTitle } from "./ui/card";
+import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface SortableColumnProps {
   id: UniqueIdentifier;
@@ -28,10 +28,10 @@ export default function SortableColumn(props: SortableColumnProps) {
   };
 
   return (
-    <div
+    <Card
       ref={setNodeRef}
       style={style}
-      className={`h-full w-48 ${isDragging ? "opacity-50" : "opacity-100"}`}
+      className={`h-full w-48 bg-transparent ${isDragging ? "opacity-50" : ""}`}
     >
       <CardHeader className="p-2">
         <CardTitle className="flex items-center gap-x-2">
@@ -48,6 +48,6 @@ export default function SortableColumn(props: SortableColumnProps) {
         </CardTitle>
       </CardHeader>
       <div className="flex flex-col gap-y-1 px-2 pb-2">{props.children}</div>
-    </div>
+    </Card>
   );
 }

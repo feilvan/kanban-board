@@ -11,7 +11,7 @@ const OverlayItem = forwardRef<HTMLDivElement, ItemProps>(
         {children}
       </div>
     );
-  }
+  },
 );
 
 OverlayItem.displayName = "OverlayItem";

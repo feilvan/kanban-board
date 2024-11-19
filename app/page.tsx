@@ -24,7 +24,8 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { PopoverClose } from "@radix-ui/react-popover";
-import { Plus, Trash } from "lucide-react";
+import { AlertTriangle, Plus, Trash } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import About from "./components/about";
@@ -94,14 +95,14 @@ export default function Home() {
     useSensor(TouchSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   const collisionDetection: CollisionDetection = (args) => {
     const rectIntersectionCollisions = rectIntersection({
       ...args,
       droppableContainers: args.droppableContainers.filter(
-        ({ id }) => id === "delete-column"
+        ({ id }) => id === "delete-column",
       ),
     });
 
@@ -112,7 +113,7 @@ export default function Home() {
     return closestCorners({
       ...args,
       droppableContainers: args.droppableContainers.filter(
-        ({ id }) => id !== "delete-column"
+        ({ id }) => id !== "delete-column",
       ),
     });
   };
@@ -131,13 +132,13 @@ export default function Home() {
 
     const overColumn = columns.find((col) => col.id === over.id);
     const overItem = columns.find((col) =>
-      col.items.some((item) => item.id === over.id.toString())
+      col.items.some((item) => item.id === over.id.toString()),
     );
 
     const overContainer = overColumn || overItem;
 
     const activeContainer = columns.find((col) =>
-      col.items.some((item) => item.id === active.id.toString())
+      col.items.some((item) => item.id === active.id.toString()),
     );
 
     if (
@@ -149,22 +150,22 @@ export default function Home() {
         setColumns((cols) => {
           const source = cols.find((col) => col.id === activeContainer.id);
           const destination = cols.find(
-            (col) => col.id === (overColumn ? overColumn.id : overItem!.id)
+            (col) => col.id === (overColumn ? overColumn.id : overItem!.id),
           );
           if (source && destination) {
             const sourceItems = [...source.items];
             const destItems = [...destination.items];
             const [movedItem] = sourceItems.splice(
               source.items.findIndex(
-                (item) => item.id === active.id.toString()
+                (item) => item.id === active.id.toString(),
               ),
-              1
+              1,
             );
             if (overColumn) {
               destItems.push(movedItem);
             } else {
               const overIndex = destItems.findIndex(
-                (item) => item.id === over.id.toString()
+                (item) => item.id === over.id.toString(),
               );
               destItems.splice(overIndex, 0, movedItem);
             }
@@ -191,13 +192,13 @@ export default function Home() {
 
     const overColumn = columns.find((col) => col.id === over.id);
     const overItem = columns.find((col) =>
-      col.items.some((item) => item.id === over.id.toString())
+      col.items.some((item) => item.id === over.id.toString()),
     );
 
     const overContainer = overColumn || overItem;
 
     const activeContainer = columns.find((col) =>
-      col.items.some((item) => item.id === active.id.toString())
+      col.items.some((item) => item.id === active.id.toString()),
     );
 
     if (activeContainer && overContainer) {
@@ -208,22 +209,22 @@ export default function Home() {
               ? {
                   ...col,
                   items: col.items.filter(
-                    (item) => item.id !== active.id.toString()
+                    (item) => item.id !== active.id.toString(),
                   ),
                 }
-              : col
-          )
+              : col,
+          ),
         );
       } else if (activeContainer.id === overContainer.id) {
         const oldIndex = activeContainer.items.findIndex(
-          (item) => item.id === active.id.toString()
+          (item) => item.id === active.id.toString(),
         );
         let newIndex: number;
         if (overColumn) {
           newIndex = activeContainer.items.length;
         } else {
           newIndex = overContainer.items.findIndex(
-            (item) => item.id === over.id.toString()
+            (item) => item.id === over.id.toString(),
           );
         }
         setColumns((cols) =>
@@ -233,8 +234,8 @@ export default function Home() {
                   ...col,
                   items: arrayMove(col.items, oldIndex, newIndex),
                 }
-              : col
-          )
+              : col,
+          ),
         );
       }
     }
@@ -250,14 +251,14 @@ export default function Home() {
       text: newItemText,
     };
     const targetColumn = columns.find(
-      (col) => col.id !== "delete-column"
+      (col) => col.id !== "delete-column",
     ) as Column;
     setColumns((cols) =>
       cols.map((col) =>
         col.id === targetColumn.id
           ? { ...col, items: [...col.items, newItem] }
-          : col
-      )
+          : col,
+      ),
     );
     setNewItemText("");
   }
@@ -273,7 +274,7 @@ export default function Home() {
   }
 
   return (
-    <div className="max-w-screen-sm w-full flex flex-col">
+    <div className="flex w-full max-w-screen-sm flex-col">
       <DndContext
         onDragStart={handleDragStart}
         onDragOver={handleDragOver}
@@ -323,10 +324,15 @@ export default function Home() {
             </Popover>
             <ThemeToggle />
             <About />
+            <Link href="/test">
+              <Button variant="destructive" size="icon">
+                <AlertTriangle />
+              </Button>
+            </Link>
           </div>
           <Droppable
             id="delete-column"
-            className={`p-0 gap-2 inline-flex items-center justify-center transition-opacity border-dashed border-red-900 bg-red-50 dark:bg-red-950/20 text-red-400 h-9 px-4 py-2 rounded-md self-start ${
+            className={`inline-flex h-9 items-center justify-center gap-2 self-start rounded-md border-dashed border-red-900 bg-red-50 p-0 px-4 py-2 text-red-400 transition-opacity dark:bg-red-950/20 ${
               activeId ? "opacity-100" : "opacity-0"
             }`}
           >
@@ -334,7 +340,7 @@ export default function Home() {
             Drop here to delete
           </Droppable>
         </div>
-        <div className="flex gap-x-2 overflow-x-auto flex-grow">
+        <div className="flex flex-grow gap-x-2 overflow-x-auto">
           <SortableContext
             items={columns.map((col) => col.id)}
             strategy={horizontalListSortingStrategy}
@@ -356,7 +362,7 @@ export default function Home() {
                           </SortableItem>
                         ))
                       ) : (
-                        <div className="text-neutral-700 h-9 grid place-items-center">
+                        <div className="grid h-9 place-items-center text-neutral-700">
                           Drop items here
                         </div>
                       )}

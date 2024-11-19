@@ -39,7 +39,7 @@ export default function About() {
               </div>
               <div>
                 Current feature:
-                <ul className="list-disc list-inside">
+                <ul className="list-inside list-disc">
                   <li>Drag and drop tasks between columns</li>
                   <li>Drag and drop tasks within a column</li>
                   <li>Task creation</li>
@@ -49,7 +49,7 @@ export default function About() {
               </div>
               <div>
                 To be implemented:
-                <ul className="list-disc list-inside">
+                <ul className="list-inside list-disc">
                   <li>Reorder column</li>
                   <li>Task editing</li>
                   <li>Column deletion</li>
