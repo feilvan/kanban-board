@@ -18,8 +18,13 @@ export default function Page() {
     setProjects(initData);
   });
 
+  useEffect(() => {
+    console.log("projects", projects);
+  }, [projects]);
+
   const activeId = useColumns((state) => state.activeId);
   const overId = useColumns((state) => state.overId);
+  const isActiveColumn = useColumns((state) => state.isActiveColumn);
 
   return (
     <div className="my-6 space-y-2">
@@ -37,6 +42,7 @@ export default function Page() {
       </div>
       <div>Active ID: {activeId}</div>
       <div>Over ID: {overId}</div>
+      <div>Is Active Column?: {String(isActiveColumn)}</div>
     </div>
   );
 }

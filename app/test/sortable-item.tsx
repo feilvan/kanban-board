@@ -5,6 +5,7 @@ import { CSS } from "@dnd-kit/utilities";
 interface SortableItemProps {
   id: UniqueIdentifier;
   children: React.ReactNode;
+  disabled?: boolean;
 }
 
 export default function SortableItem(props: SortableItemProps) {
@@ -24,7 +25,7 @@ export default function SortableItem(props: SortableItemProps) {
 
   return (
     <div
-      ref={setNodeRef}
+      ref={props.disabled ? undefined : setNodeRef}
       style={style}
       {...attributes}
       {...listeners}
