@@ -88,7 +88,6 @@ function Columns({ project }: { project?: Project }) {
             column.item.find((item) => item.id === overId) ||
             column.id === overId,
         );
-        console.log(activeColumn, overColumn);
         if (activeColumn && overColumn && activeColumn !== overColumn) {
           const activeItem = activeColumn.item.find(
             (item) => item.id === activeId,

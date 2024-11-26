@@ -1,7 +1,6 @@
 "use client";
 
 import { RefreshCw } from "lucide-react";
-import { useEffect } from "react";
 
 import { Button } from "@/components/ui/button";
 
@@ -13,21 +12,10 @@ import Project from "./project";
 export default function Page() {
   const projects = useProjects((state) => state.projects);
   const selectedProjectId = useProjects((state) => state.selectedProjectId);
-  useEffect(() => {
-    console.log("projects", projects);
-  }, [projects]);
 
   const activeId = useColumns((state) => state.activeId);
   const overId = useColumns((state) => state.overId);
   const isActiveColumn = useColumns((state) => state.isActiveColumn);
-
-  function resetProjects() {
-    useProjects.setState((state) => ({
-      ...state,
-      projects: initData,
-    }));
-    console.log("reset projects");
-  }
 
   return (
     <div className="my-6 space-y-2">
@@ -35,7 +23,15 @@ export default function Page() {
       <div className="space-x-1 space-y-2">
         <Project.Combobox />
         <Project.AddProject />
-        <Button variant="outline" onClick={resetProjects}>
+        <Button
+          variant="outline"
+          onClick={() => {
+            useProjects.setState((state) => ({
+              ...state,
+              projects: JSON.parse(JSON.stringify(initData)),
+            }));
+          }}
+        >
           <RefreshCw />
           Reset
         </Button>
