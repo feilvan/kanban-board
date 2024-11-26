@@ -12,12 +12,7 @@ import Project from "./project";
 
 export default function Page() {
   const projects = useProjects((state) => state.projects);
-  const setProjects = useProjects((state) => state.setProjects);
   const selectedProjectId = useProjects((state) => state.selectedProjectId);
-  useEffect(() => {
-    setProjects(initData);
-  });
-
   useEffect(() => {
     console.log("projects", projects);
   }, [projects]);
@@ -26,13 +21,21 @@ export default function Page() {
   const overId = useColumns((state) => state.overId);
   const isActiveColumn = useColumns((state) => state.isActiveColumn);
 
+  function resetProjects() {
+    useProjects.setState((state) => ({
+      ...state,
+      projects: initData,
+    }));
+    console.log("reset projects");
+  }
+
   return (
     <div className="my-6 space-y-2">
       <span className="font-semibold tracking-tight">Testing Ground</span>
       <div className="space-x-1 space-y-2">
         <Project.Combobox />
         <Project.AddProject />
-        <Button variant="outline" onClick={() => setProjects(initData)}>
+        <Button variant="outline" onClick={resetProjects}>
           <RefreshCw />
           Reset
         </Button>

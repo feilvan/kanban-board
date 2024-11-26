@@ -28,9 +28,6 @@ function Combobox() {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
   const projects = useProjects((state) => state.projects);
-  const setSelectedProjectId = useProjects(
-    (state) => state.setSelectedProjectId,
-  );
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -57,7 +54,10 @@ function Combobox() {
                   value={project.title}
                   onSelect={(currentValue) => {
                     setValue(currentValue === value ? "" : currentValue);
-                    setSelectedProjectId(project.id);
+                    useProjects.setState((state) => ({
+                      ...state,
+                      selectedProjectId: project.id,
+                    }));
                     setOpen(false);
                   }}
                 >
@@ -81,14 +81,20 @@ function Combobox() {
 function AddProject() {
   const [newText, setNewText] = useState("");
   const projects = useProjects((state) => state.projects);
-  const setProjects = useProjects((state) => state.setProjects);
 
   function handleAddProject() {
     if (newText) {
-      setProjects([
-        ...projects,
-        { id: randomUUID(), title: newText, column: [] },
-      ]);
+      useProjects.setState((state) => ({
+        ...state,
+        projects: [
+          ...projects,
+          {
+            id: randomUUID(),
+            title: newText,
+            column: [],
+          },
+        ],
+      }));
       setNewText("");
     }
   }

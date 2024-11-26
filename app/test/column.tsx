@@ -1,5 +1,6 @@
 import {
   closestCorners,
+  CollisionDetection,
   DndContext,
   DragEndEvent,
   DragMoveEvent,
@@ -44,7 +45,7 @@ export const useColumns = create<ColumnsState>((set) => ({
 }));
 
 function Columns({ project }: { project?: Project }) {
-  const setProjects = useProjects((state) => state.setProjects);
+  // const setProjects = useProjects((state) => state.setProjects);
   const activeId = useColumns((state) => state.activeId);
   const setActiveId = useColumns((state) => state.setActiveId);
   const setOverId = useColumns((state) => state.setOverId);
@@ -78,27 +79,31 @@ function Columns({ project }: { project?: Project }) {
     const activeId = event.active.id;
 
     if (overId !== activeId) {
-      const activeColumn = project?.column.find((column) =>
-        column.item.find((item) => item.id === activeId),
-      );
-      const overColumn = project?.column.find((column) =>
-        column.item.find((item) => item.id === overId),
-      );
-
-      if (activeColumn && overColumn && activeColumn !== overColumn) {
-        const activeItem = activeColumn.item.find(
-          (item) => item.id === activeId,
+      setTimeout(() => {
+        const activeColumn = project?.column.find((column) =>
+          column.item.find((item) => item.id === activeId),
         );
-        const overIndex = overColumn.item.findIndex(
-          (item) => item.id === overId,
+        const overColumn = project?.column.find(
+          (column) =>
+            column.item.find((item) => item.id === overId) ||
+            column.id === overId,
         );
+        console.log(activeColumn, overColumn);
+        if (activeColumn && overColumn && activeColumn !== overColumn) {
+          const activeItem = activeColumn.item.find(
+            (item) => item.id === activeId,
+          );
+          const overIndex = overColumn.item.findIndex(
+            (item) => item.id === overId,
+          );
 
-        if (activeItem) {
-          activeColumn.item.splice(activeColumn.item.indexOf(activeItem), 1);
-          overColumn.item.splice(overIndex, 0, activeItem);
-          setOverId(overId);
+          if (activeItem) {
+            activeColumn.item.splice(activeColumn.item.indexOf(activeItem), 1);
+            overColumn.item.splice(overIndex, 0, activeItem);
+            setOverId(overId);
+          }
         }
-      }
+      }, 0);
     }
   }
 
@@ -139,8 +144,10 @@ function Columns({ project }: { project?: Project }) {
         const sourceColumn = updatedProject.column.find((column) =>
           column.item.find((item) => item.id === sourceId),
         );
-        const destinationColumn = updatedProject.column.find((column) =>
-          column.item.find((item) => item.id === destinationId),
+        const destinationColumn = updatedProject.column.find(
+          (column) =>
+            column.item.find((item) => item.id === destinationId) ||
+            column.id === destinationId,
         );
         if (sourceColumn && destinationColumn) {
           const sourceItem = sourceColumn.item.find(
@@ -155,15 +162,21 @@ function Columns({ project }: { project?: Project }) {
           }
         }
       }
-      setProjects([updatedProject]);
+      useProjects.setState((state) => ({
+        projects: state.projects.map((p) =>
+          p.id === updatedProject.id ? updatedProject : p,
+        ),
+      }));
     }
   }
+
+  const collisionDetection: CollisionDetection = closestCorners;
 
   return (
     project && (
       <DndContext
         sensors={sensors}
-        collisionDetection={closestCorners}
+        collisionDetection={collisionDetection}
         onDragStart={handleDragStart}
         onDragMove={handleDragMove}
         onDragOver={handleDragOver}

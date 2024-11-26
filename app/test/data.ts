@@ -9,16 +9,12 @@ export function randomUUID() {
 
 type ProjectsState = {
   projects: Project[];
-  setProjects: (projects: Project[]) => void;
   selectedProjectId?: string;
-  setSelectedProjectId: (id: string) => void;
 };
 
-export const useProjects = create<ProjectsState>((set) => ({
+export const useProjects = create<ProjectsState>(() => ({
   projects: [],
-  setProjects: (projects) => set({ projects: projects }),
   selectedProjectId: undefined,
-  setSelectedProjectId: (id) => set({ selectedProjectId: id }),
 }));
 
 export const initData: Project[] = [
