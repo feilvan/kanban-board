@@ -10,11 +10,13 @@ export function randomUUID() {
 type ProjectsState = {
   projects: Project[];
   selectedProjectId?: string;
+  selectedProjectTitle?: string;
 };
 
 export const useProjects = create<ProjectsState>(() => ({
   projects: [],
   selectedProjectId: undefined,
+  selectedProjectTitle: undefined,
 }));
 
 export const initData: Project[] = [

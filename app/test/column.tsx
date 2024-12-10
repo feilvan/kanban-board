@@ -5,7 +5,6 @@ import {
   DragEndEvent,
   DragMoveEvent,
   DragOverEvent,
-  DragOverlay,
   DragStartEvent,
   KeyboardSensor,
   PointerSensor,
@@ -45,8 +44,6 @@ export const useColumns = create<ColumnsState>((set) => ({
 }));
 
 function Columns({ project }: { project?: Project }) {
-  // const setProjects = useProjects((state) => state.setProjects);
-  const activeId = useColumns((state) => state.activeId);
   const setActiveId = useColumns((state) => state.setActiveId);
   const setOverId = useColumns((state) => state.setOverId);
   const isActiveColumn = useColumns((state) => state.isActiveColumn);
@@ -184,7 +181,7 @@ function Columns({ project }: { project?: Project }) {
         <div className="flex gap-2">
           <SortableContext items={project.column.map((column) => column.id)}>
             {project.column.map((column) => (
-              <Droppable key={column.id} id={column.id}>
+              <Droppable key={column.id} id={column.id} className="relative">
                 <SortableColumn id={column.id} title={column.title}>
                   <SortableContext items={column.item.map((item) => item.id)}>
                     {column.item.map((item) => (
@@ -193,7 +190,7 @@ function Columns({ project }: { project?: Project }) {
                         id={item.id}
                         disabled={isActiveColumn}
                       >
-                        <div>{item.title}</div>
+                        {item.title}
                       </SortableItem>
                     ))}
                   </SortableContext>
@@ -202,15 +199,16 @@ function Columns({ project }: { project?: Project }) {
             ))}
           </SortableContext>
         </div>
-        <DragOverlay>
+        {/* <DragOverlay>
           {activeId ? (
+            // TODO: Separate dnd components and rendering
             project.column.find((column) => column.id === activeId) ? (
-              <div>Column</div>
+              <div>Column</div> // <SortableColumn disabled id={activeId} title="project.column.find((column) => column.id === activeId)?.title">
             ) : (
               <div>Item</div>
             )
           ) : null}
-        </DragOverlay>
+        </DragOverlay> */}
       </DndContext>
     )
   );

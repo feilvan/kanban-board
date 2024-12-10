@@ -22,7 +22,7 @@ export default function Page() {
       <span className="font-semibold tracking-tight">Testing Ground</span>
       <div className="space-x-1 space-y-2">
         <Project.Combobox />
-        <Project.AddProject />
+        <Project.Menu />
         <Button
           variant="outline"
           onClick={() => {
